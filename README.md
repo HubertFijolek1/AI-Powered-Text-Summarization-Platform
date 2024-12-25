@@ -14,6 +14,32 @@ Welcome to the AI-Powered Text Summarization Platform project. This application 
 - `tests/`: Contains unit and integration tests.
 - `docker/`: Contains Docker-related configuration files.
 
-## Getting Started
+## Running the Application Locally
 
-Instructions for setting up the development environment will be added soon.
+1. **Activate the virtual environment** (if using one):
+    ```bash
+    source .venv/bin/activate
+    ```
+
+2. **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. **Run the FastAPI application**:
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+
+4. **Access the health check endpoint**:
+    Visit `http://localhost:8000/health` in your browser or use `curl`:
+    ```bash
+    curl http://localhost:8000/health
+    ```
+    Expected response:
+    ```json
+    {
+      "status": "OK"
+    }
+    ```
+

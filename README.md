@@ -43,3 +43,21 @@ Welcome to the AI-Powered Text Summarization Platform project. This application 
     }
     ```
 
+## Running the Application with Docker
+
+Ensure you have Docker and Docker Compose installed on your machine.
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/HubertFijolek1/AI-Powered-Text-Summarization-Platform.git
+    cd AI-Powered-Text-Summarization-Platform
+    ```
+
+2. **Build and run the containers**:
+    ```bash
+    docker-compose up --build
+    ```
+
+3. **Access the application**:
+    - Health Check: `http://localhost:8000/health`
+    - Interactive API Docs: `http://localhost:8000/docs`

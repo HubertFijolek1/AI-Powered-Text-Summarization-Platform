@@ -15,6 +15,7 @@ app = FastAPI(
     description="A platform to summarize text using AI models."
 )
 
+
 @app.get("/health")
 def health_check():
     return {

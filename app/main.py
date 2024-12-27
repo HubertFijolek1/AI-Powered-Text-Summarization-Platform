@@ -2,8 +2,10 @@ import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
 
+
 # Load environment variables from .env file
 load_dotenv()
+
 
 POSTGRES_USER = os.getenv("POSTGRES_USER", "default_user")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "default_pass")

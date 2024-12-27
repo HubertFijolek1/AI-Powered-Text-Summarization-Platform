@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -13,6 +14,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     summaries = relationship("Summary", back_populates="owner")
+
 
 class Summary(Base):
     __tablename__ = "summaries"

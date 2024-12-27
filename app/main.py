@@ -1,11 +1,12 @@
-import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
+import os
 
+from app.routers import auth
+from app.routers import health
 
 # Load environment variables from .env file
 load_dotenv()
-
 
 POSTGRES_USER = os.getenv("POSTGRES_USER", "default_user")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "default_pass")
@@ -17,11 +18,5 @@ app = FastAPI(
     description="A platform to summarize text using AI models."
 )
 
-
-@app.get("/health")
-def health_check():
-    return {
-        "status": "OK",
-        "db_user": POSTGRES_USER,
-        "db_name": POSTGRES_DB
-    }
+app.include_router(health.router)
+app.include_router(auth.router)

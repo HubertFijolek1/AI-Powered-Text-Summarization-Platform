@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserLogin
 from app.models import User
 from app.database import SessionLocal
 from passlib.context import CryptContext
@@ -34,3 +34,18 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+@router.post("/login")
+def login(user_login: UserLogin, db: Session = Depends(get_db)):
+    """
+    Basic login endpoint skeleton.
+    Returns placeholder response for now.
+    """
+    email = user_login.email
+    password = user_login.password
+
+    # Placeholder response
+    return {
+        "message": "Login endpoint called",
+        "email": email
+    }

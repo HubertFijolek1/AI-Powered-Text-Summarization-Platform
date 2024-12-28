@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
+from app.routers import summarize
 
 from app.routers import auth
 from app.routers import health
@@ -20,3 +21,4 @@ app = FastAPI(
 
 app.include_router(health.router)
 app.include_router(auth.router)
+app.include_router(summarize.router)

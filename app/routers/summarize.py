@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 
@@ -11,13 +11,16 @@ def mock_summarizer(text: str) -> str:
         return ""
     return text[:30] + "... (mock summary)"
 
+
 router = APIRouter(
     prefix="/summaries",
     tags=["summaries"]
 )
 
+
 class SummarizeRequest(BaseModel):
     text: str
+
 
 @router.post("/")
 def get_summary(request: SummarizeRequest):

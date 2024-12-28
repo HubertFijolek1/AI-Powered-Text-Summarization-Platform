@@ -1,9 +1,5 @@
 import sys
 from pathlib import Path
-
-# Adding the project root directory to the Python path
-sys.path.append(str(Path(__file__).resolve().parents[2]))
-
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -11,6 +7,10 @@ from alembic import context
 import os
 from dotenv import load_dotenv
 from app.database import Base
+
+# Adding the project root directory to the Python path
+sys.path.append(str(Path(__file__).resolve().parents[2]))
+
 
 # Load environment variables
 load_dotenv()

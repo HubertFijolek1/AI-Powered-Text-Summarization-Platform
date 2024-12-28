@@ -6,6 +6,7 @@ JWT_SECRET = os.getenv("JWT_SECRET", "defaultsecret")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRATION = int(os.getenv("JWT_EXPIRATION", "3600"))
 
+
 def create_access_token(data: dict) -> str:
     """
     Create a JWT token containing the user's data.
@@ -15,6 +16,7 @@ def create_access_token(data: dict) -> str:
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return encoded_jwt
+
 
 def decode_access_token(token: str) -> dict:
     """

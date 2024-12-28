@@ -13,12 +13,14 @@ router = APIRouter(
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -36,14 +38,15 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+
 @router.post("/login")
 def login(user_login: UserLogin, db: Session = Depends(get_db)) -> dict:
     """
     Basic login endpoint skeleton.
     Returns placeholder response for now.
     """
-    email = user_login.email
-    password = user_login.password
+    # email = user_login.email
+    # password = user_login.password
 
     user = db.query(User).filter(User.email == user_login.email).first()
     if not user:
@@ -58,5 +61,4 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)) -> dict:
     access_token = create_access_token(token_data)
     return {
            "access_token": access_token,
-           "token_type": "bearer"
-                               }
+           "token_type": "bearer"}

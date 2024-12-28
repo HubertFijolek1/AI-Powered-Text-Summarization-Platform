@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Maps host port 5432 to container port 5432
     networks:
       - app_net
 

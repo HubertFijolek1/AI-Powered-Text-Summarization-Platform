@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Adding the project root directory to the Python path
+sys.path.append(str(Path(__file__).resolve().parents[2]))
+
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -21,12 +27,15 @@ target_metadata = Base.metadata
 
 
 def run_migrations_offline():
-    """Run migrations in 'offline' mode.
-    """
+    """Run migrations in 'offline' mode."""
     url = os.getenv("DATABASE_URL")
+    if not url:
+        raise Exception("DATABASE_URL is not set in the environment variables.")
     context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True,
-        dialect_opts={"paramstyle": "named"}
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
     )
 
     with context.begin_transaction():
@@ -34,13 +43,12 @@ def run_migrations_offline():
 
 
 def run_migrations_online():
-    """Run migrations in 'online' mode.
-    """
+    """Run migrations in 'online' mode."""
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
-        url=os.getenv("DATABASE_URL")
+        url=os.getenv("DATABASE_URL"),
     )
 
     with connectable.connect() as connection:

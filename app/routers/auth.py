@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
-# Import the newly added schema
 from app.schemas.user import (
     UserCreate,
     UserResponse,
@@ -63,3 +62,24 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)) -> dict:
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+@router.get("/me", response_model=UserMeResponse)
+def get_current_user(authorization: str = Header(None), db: Session = Depends(get_db)):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+
+    scheme, _, token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not token:
+        raise HTTPException(status_code=401, detail="Invalid authorization format")
+
+    payload = decode_access_token(token)
+    if not payload or "user_id" not in payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    user_id = payload["user_id"]
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    return UserMeResponse.from_orm(user)

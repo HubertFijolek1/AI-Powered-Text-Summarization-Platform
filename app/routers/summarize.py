@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 def mock_summarizer(text: str) -> str:
@@ -19,7 +19,11 @@ router = APIRouter(
 
 
 class SummarizeRequest(BaseModel):
-    text: str
+    text: str = Field(
+        ...,
+        min_length=5,
+        description="Text to summarize (min 5 characters)."
+    )
 
 
 @router.post("/")

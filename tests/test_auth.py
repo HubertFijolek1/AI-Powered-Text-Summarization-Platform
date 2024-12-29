@@ -38,3 +38,20 @@ def test_get_current_user_valid(token_factory):
     # Expect user not found if user ID 1 doesn't exist
     assert response.status_code == 401
     assert response.json()["detail"] in ["User not found", "Invalid or expired token"]
+
+def test_put_current_user_no_header():
+    response = client.put("/auth/me", json={"name": "NewName"})
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Authorization header missing"
+
+
+def test_put_current_user_valid(token_factory):
+    token = token_factory(user_id=999, user_email="old@example.com")
+    response = client.put(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"name": "NewName"}
+    )
+    # Expect 401 if user 999 is not in DB
+    assert response.status_code == 401
+    assert response.json()["detail"] == "User not found"

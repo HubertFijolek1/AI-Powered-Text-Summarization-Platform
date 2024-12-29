@@ -92,9 +92,30 @@ def update_current_user(
     authorization: str = Header(None),
     db: Session = Depends(get_db)
 ):
-    """
-    Empty skeleton for updating user profile.
-    Will be completed in the next sub-commit.
-    """
-    # We'll fill in logic next.
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+
+    scheme, _, token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not token:
+        raise HTTPException(status_code=401, detail="Invalid authorization format")
+
+    payload = decode_access_token(token)
+    if not payload or "user_id" not in payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    user_id = payload["user_id"]
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    if user_update.name is not None:
+        user.name = user_update.name
+    if user_update.email is not None:
+        existing_user = db.query(User).filter(User.email == user_update.email).first()
+        if existing_user and existing_user.id != user_id:
+            raise HTTPException(status_code=400, detail="Email already registered.")
+        user.email = user_update.email
+
+    db.commit()
+    db.refresh(user)
+    return UserMeResponse.from_orm(user)

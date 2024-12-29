@@ -1,5 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+
+
+router = APIRouter(
+    prefix="/summaries",
+    tags=["summaries"]
+)
 
 
 def mock_summarizer(text: str) -> str:
@@ -12,12 +18,6 @@ def mock_summarizer(text: str) -> str:
     return text[:30] + "... (mock summary)"
 
 
-router = APIRouter(
-    prefix="/summaries",
-    tags=["summaries"]
-)
-
-
 class SummarizeRequest(BaseModel):
     text: str = Field(
         ...,
@@ -28,11 +28,12 @@ class SummarizeRequest(BaseModel):
 
 @router.post("/")
 def get_summary(request: SummarizeRequest):
-    """
-    Return a mock AI-based summary for the provided text.
-    """
-    summary = mock_summarizer(request.text)
+    cleaned_text = request.text.strip()
+    if len(cleaned_text) < 5:
+        raise HTTPException(status_code=422, detail="Text must be at least 5 characters")
+
+    summary = mock_summarizer(cleaned_text)
     return {
-        "original_text": request.text,
+        "original_text": cleaned_text,
         "summary": summary
     }

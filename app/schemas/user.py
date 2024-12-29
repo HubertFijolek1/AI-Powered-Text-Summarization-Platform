@@ -19,3 +19,11 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserMeResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+
+    class Config:
+        orm_mode = True

@@ -6,7 +6,8 @@ from app.schemas.user import (
     UserCreate,
     UserResponse,
     UserLogin,
-    UserMeResponse
+    UserMeResponse,
+    UserUpdate
 )
 from app.models import User
 from app.database import SessionLocal
@@ -83,3 +84,17 @@ def get_current_user(authorization: str = Header(None), db: Session = Depends(ge
         raise HTTPException(status_code=401, detail="User not found")
 
     return UserMeResponse.from_orm(user)
+
+
+@router.put("/me", response_model=UserMeResponse)
+def update_current_user(
+    user_update: UserUpdate,
+    authorization: str = Header(None),
+    db: Session = Depends(get_db)
+):
+    """
+    Empty skeleton for updating user profile.
+    Will be completed in the next sub-commit.
+    """
+    # We'll fill in logic next.
+    raise HTTPException(status_code=501, detail="Not implemented yet")

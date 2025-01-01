@@ -42,6 +42,18 @@ Welcome to the AI-Powered Text Summarization Platform project. This application 
       "status": "OK"
     }
     ```
+## Logging Configuration
+This application uses Python's built-in `logging` module for logs. By default, 
+logs are printed to the console (`stdout`). You can set the log level by 
+defining the `LOG_LEVEL` environment variable (e.g., `DEBUG`, `INFO`, `WARNING`).
+
+Example:
+```bash
+ export LOG_LEVEL=DEBUG
+ uvicorn app.main:app --reload
+ ```
+
+You will see additional debug messages in the terminal.
 
 ## Running the Application with Docker
 

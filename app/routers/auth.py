@@ -32,8 +32,10 @@ def get_db():
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
+    logger.info(f"Attempting to register user with email: {user.email}")
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
+        logger.warning(f"Registration failed. Email {user.email} is already registered.")
         raise HTTPException(status_code=400, detail="Email already registered.")
     hashed_password = pwd_context.hash(user.password)
     new_user = User(
@@ -44,22 +46,25 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    logger.info(f"Successfully registered user: {new_user.email}")
     return new_user
 
 
 @router.post("/login")
 def login(user_login: UserLogin, db: Session = Depends(get_db)) -> dict:
+    logger.info(f"User attempting to log in: {user_login.email}")
     user = db.query(User).filter(User.email == user_login.email).first()
-    if not user:
+    if not user or not pwd_context.verify(user_login.password, user.hashed_password):
+        logger.warning(f"Invalid login credentials for email: {user_login.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    if not pwd_context.verify(user_login.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+
 
     token_data = {
         "sub": user.email,
         "user_id": user.id
     }
     access_token = create_access_token(token_data)
+    logger.info(f"User logged in successfully: {user_login.email}")
     return {
         "access_token": access_token,
         "token_type": "bearer"

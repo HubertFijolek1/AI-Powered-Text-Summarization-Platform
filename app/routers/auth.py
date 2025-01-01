@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Header
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
+import logging
 
 from app.schemas.user import (
     UserCreate,
@@ -19,7 +20,7 @@ router = APIRouter(
 )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+logger = logging.getLogger(__name__)
 
 def get_db():
     db = SessionLocal()

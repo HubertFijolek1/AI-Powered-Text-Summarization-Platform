@@ -23,6 +23,8 @@ services:
       - db
     env_file:
       - .env
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
     networks:
       - app_net
 

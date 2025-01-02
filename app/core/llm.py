@@ -1,6 +1,9 @@
 import os
 import openai
 from dotenv import load_dotenv
+import logging
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -34,5 +37,5 @@ def summarize_with_openai(text: str) -> str:
         summary = response.choices[0].message["content"].strip()
         return summary
     except Exception as e:
-        # Fallback or re-raise error
-        return f"Error calling LLM: {str(e)}"
+        logger.error(f"LLM Error: {str(e)}")
+        return f"An error occurred during summarization."

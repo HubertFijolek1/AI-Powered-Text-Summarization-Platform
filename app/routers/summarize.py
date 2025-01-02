@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 import logging
+from app.core.llm import summarize_with_openai
 
 router = APIRouter(
     prefix="/summaries",
@@ -8,16 +9,6 @@ router = APIRouter(
 )
 
 logger = logging.getLogger(__name__)
-
-def mock_summarizer(text: str) -> str:
-    """
-    Pretend to call a real AI model here.
-    Return a truncated version of the text as a 'summary'.
-    """
-    if not text:
-        return ""
-    return text[:30] + "... (mock summary)"
-
 
 class SummarizeRequest(BaseModel):
     text: str = Field(
@@ -34,7 +25,7 @@ def get_summary(request: SummarizeRequest):
     if len(cleaned_text) < 5:
         raise HTTPException(status_code=422, detail="Text must be at least 5 characters")
 
-    summary = mock_summarizer(cleaned_text)
+    summary = summarize_with_openai(cleaned_text)
     logger.info("Summarization successful.")
     return {
         "original_text": cleaned_text,
